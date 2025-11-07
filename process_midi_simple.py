@@ -756,8 +756,9 @@ def train_model(sequences, vocab, id_to_token, time_resolution, epochs=10, batch
 # ============================================================
 # 生成函数
 # ============================================================
-
-def generate_music(model, vocab, id_to_token, time_resolution, max_events=100, 
+#top_k指的是从下一个token的logits中选择前k个最大的token，logits是每个token的logits值
+#选择前k个是为了防止生成过于相似的token，导致生成的音乐过于单调
+def generate_music(model, vocab, id_to_token, time_resolution, max_events=1000, 
                   temperature=0.8, top_k=50):
     """生成音乐序列（2-token方案：note, duration）"""
     generated = [vocab['<sos>']]
@@ -912,7 +913,7 @@ def main_train_and_generate():
     
     # 3. 训练模型
     model = train_model(sequences, vocab, id_to_token, time_resolution, 
-                       epochs=10, batch_size=4, samples_per_epoch=50)
+                       epochs=100, batch_size=4, samples_per_epoch=50)
     
     # 4. 生成音乐
     print("\n" + "=" * 80)
